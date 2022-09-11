@@ -61,7 +61,7 @@ ENV FASTAPI_ENV=production
 COPY --from=builder-base $POETRY_HOME $POETRY_HOME
 COPY --from=builder-base $PYSETUP_PATH $PYSETUP_PATH
 # Copying in our entrypoint
-COPY ./docker/docker-entrypoint.sh /docker-entrypoint.sh
+COPY ./scripts/docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 WORKDIR /app
 COPY . .
