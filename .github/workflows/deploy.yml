@@ -23,5 +23,5 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run:
           flyctl deploy --remote-only --env FAMT_ALGORITHM=${{ secrets.FAMT_ALGORITHM }}
-          --env FAMT_MONGO_URL=${{ secrets.FAMT_MONGO_URL }}
+          --env FAAUTH_DB=${{ secrets.FAAUTH_DB }}
           --env FAMT_SECRET_KEY=${{ secrets.FAMT_SECRET_KEY }}
