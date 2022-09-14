@@ -3,8 +3,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-print(environ.get("FAAUTH_DB"))
-
 engine = create_engine(environ.get("FAAUTH_DB"))
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
