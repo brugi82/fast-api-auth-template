@@ -16,10 +16,6 @@ class User(UserBase):
     confirmed: bool = False
 
 
-class UserInDb(User):
-    hashed_password: str
-
-
 class CryptoConfig(BaseSchema):
     secret_key: str
     algo: str
@@ -28,3 +24,7 @@ class CryptoConfig(BaseSchema):
 class Token(BaseSchema):
     access_token: str
     token_type: str
+
+
+class Confirmation(BaseSchema):
+    secret: str

@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Response
 from fastapi.exceptions import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.auth import schemas, models
 from app.db import get_db
-from app.auth.services import get_user, get_user_by_email, create_new_user
+from app.auth.services import get_user_by_email, create_new_user, confirm_user_email
 from app.auth.dependencies import (
     CryptoConfig,
     get_crypto_config,
@@ -24,7 +24,7 @@ def me(user: models.User = Depends(get_current_user)):
     return user
 
 
-@router.post("/create", response_model=schemas.User)
+@router.post("/", response_model=schemas.User)
 def create_user(user: schemas.CreateUser, session: Session = Depends(get_db)):
     db_user = get_user_by_email(session, user.email)
     if db_user:
@@ -54,3 +54,9 @@ def user_login(
 def protected(user: models.User = Depends(get_current_user)):
     msg = f"You are on protected route. User email {user.email}"
     return msg
+
+
+@router.post("/confirm")
+def confirm_email(confirmation: schemas.Confirmation, db: Session = Depends(get_db)):
+    confirm_user_email(db, confirmation.secret)
+    return Response(status_code=status.HTTP_200_OK)
