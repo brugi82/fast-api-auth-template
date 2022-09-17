@@ -21,7 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run:
-          flyctl deploy --remote-only --env FAMT_ALGORITHM=${{ secrets.FAMT_ALGORITHM }}
+      - run: flyctl deploy --remote-only
+          --env FAMT_ALGORITHM=${{ secrets.FAMT_ALGORITHM }}
           --env FAAUTH_DB=${{ secrets.FAAUTH_DB }}
           --env FAMT_SECRET_KEY=${{ secrets.FAMT_SECRET_KEY }}
+          --env FAAUTH_APP_BASE_URL=${{ secrets.FAAUTH_APP_BASE_URL }}
+          --env FAAUTH_EMAIL=${{ secrets.FAAUTH_EMAIL }}
+          --env FAAUTH_FROM=${{ secrets.FAAUTH_FROM }}
+          --env FAAUTH_PASS=${{ secrets.FAAUTH_PASS }}
+          --env FAAUTH_SMTP=${{ secrets.FAAUTH_SMTP }}
