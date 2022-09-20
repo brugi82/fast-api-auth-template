@@ -56,6 +56,14 @@ def get_current_confirmed_user(user: models.User = Depends(get_current_user)):
     return user
 
 
+def get_current_admin_user(user: models.User = Depends(get_current_confirmed_user)):
+    if user.user_type.name != models.UserType.Admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Unauthorized."
+        )
+    return user
+
+
 def create_access_token(
     data: dict,
     crypto_config: CryptoConfig,
