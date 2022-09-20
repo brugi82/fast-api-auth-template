@@ -24,7 +24,7 @@ def create_new_user(db: Session, user: schemas.CreateUser):
 
     db_user = models.User(**user_model_args, hashed_password=hashed_password)
     db.add(db_user)
-    db_user.confirmations.append(models.Confirmation(secret=secret))
+    db_user.confirmations.append(models.Confirmation(secret=secret, issued_at=datetime.utcnow()))
     email.send_invitation_email(
         user.email, user.first_name, f"{APP_BASE_URL}/registration/?secret={secret}"
     )
@@ -44,6 +44,8 @@ def confirm_user_email(db: Session, secret: str):
         raise Exception("Invalid confirmation link")
     if confirmation.used == True:
         raise Exception("Confirmation is already used")
+    if (datetime.utcnow() - confirmation.issued_at) > 24:
+        raise Exception("Confirmation link expired.")
     confirmation.used = True
     confirmation.used_at = datetime.utcnow()
     confirmation.user.confirmed = True

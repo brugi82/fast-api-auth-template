@@ -12,6 +12,7 @@ from app.auth.dependencies import (
     authenticate_user,
     create_user_access_token,
     get_current_user,
+    get_current_admin_user,
 )
 
 router = APIRouter(prefix="/auth/users")
@@ -60,3 +61,9 @@ def protected(user: models.User = Depends(get_current_user)):
 def confirm_email(confirmation: schemas.Confirmation, db: Session = Depends(get_db)):
     confirm_user_email(db, confirmation.secret)
     return Response(status_code=status.HTTP_200_OK)
+
+
+@router.get("/admin")
+def admin_route(user: models.User = Depends(get_current_admin_user)):
+    msg = f"Your account has admin privileges. {user.email}"
+    return msg
