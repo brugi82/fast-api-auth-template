@@ -36,9 +36,9 @@ def upgrade() -> None:
     op.bulk_insert(
         user_type_table,
         [
-            {id: 0, name: "Admin"},
-            {id: 1, name: "Regular"},
-            {id: 2, name: "Anonimous"},
+            {"id": 0, "name": "Admin"},
+            {"id": 1, "name": "Regular"},
+            {"id": 2, "name": "Anonimous"},
         ],
     )
 
