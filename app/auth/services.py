@@ -16,15 +16,33 @@ def get_user_by_email(db: Session, email: str) -> models.User | None:
     return db.query(models.User).filter(models.User.email == email).first()
 
 
-def create_new_user(db: Session, user: schemas.CreateUser):
+def get_user_type(
+    db: Session, user_type: models.UserType
+) -> models.UserTypeModel | None:
+    return (
+        db.query(models.UserTypeModel)
+        .filter(models.UserTypeModel.name == user_type)
+        .first()
+    )
+
+
+def create_new_user(
+    db: Session,
+    user: schemas.CreateUser,
+    user_type: models.UserType = models.UserType.Regular,
+):
     hashed_password = get_password_hash(user.password)
     secret = generate_random_string()
     user_model_args = user.dict()
     user_model_args.pop("password")
 
+    user_type_model = get_user_type(db, user_type)
     db_user = models.User(**user_model_args, hashed_password=hashed_password)
     db.add(db_user)
-    db_user.confirmations.append(models.Confirmation(secret=secret, issued_at=datetime.utcnow()))
+    db_user.confirmations.append(
+        models.Confirmation(secret=secret, issued_at=datetime.utcnow())
+    )
+    db_user.user_type = user_type_model
     email.send_invitation_email(
         user.email, user.first_name, f"{APP_BASE_URL}/registration/?secret={secret}"
     )
